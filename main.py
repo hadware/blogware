@@ -1,6 +1,6 @@
 # -*- coding: utf8 -*-
 from flask import Flask, url_for, session, request, render_template, redirect
-from database import database, admin_logins, articles
+from database import database, admin_logins, articles, ObjectId
 app = Flask(__name__)
 
 context = {}
@@ -67,10 +67,11 @@ def index():
     return render_template("home.html", context=context)
 
 
-@app.route('/article/<article_id>/')
+@app.route('/article/view/<article_id>/')
 def display_article(article_id):
     """Displays a single article"""
-    pass
+    context["article_data"] = articles.find_one({"_id" : ObjectId(article_id)})
+    return render_template("article_view.html", context = context)
 
 if __name__ == '__main__':
     app.debug = True
